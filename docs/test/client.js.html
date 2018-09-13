@@ -166,4 +166,35 @@
   <span class="p">})</span>
 <span class="p">}</span>
 
-</pre></div></td></tr></tbody></table><div id="generated">generated Wed Aug 29 2018 16:38:49 GMT-0700 (PDT)  </div></div></body></html>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">loopbackHttpPromise</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">test</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">test</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="nx">req</span><span class="p">.</span><span class="nx">setEncoding</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+    <span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">buffer</span> <span class="o">+=</span> <span class="nx">data</span>
+    <span class="p">})</span>
+    <span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">json</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="nx">json</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">buffer</span><span class="p">)</span>
+      <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// eslint-disable-next-line no-empty</span>
+      <span class="p">}</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="nx">id</span><span class="o">:</span> <span class="nx">json</span> <span class="o">&amp;&amp;</span> <span class="nx">json</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="nx">result</span><span class="o">:</span> <span class="nx">json</span> <span class="o">&amp;&amp;</span> <span class="nx">json</span><span class="p">.</span><span class="nx">params</span>
+      <span class="p">}))</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">()</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+  <span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">22224</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">jsonRpcClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">JSONRPCclient</span><span class="p">(</span><span class="k">new</span> <span class="nx">HttpTransport</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">22224</span><span class="p">))</span>
+  <span class="nx">jsonRpcClient</span><span class="p">.</span><span class="nx">registerPromise</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">jsonRpcClient</span><span class="p">.</span><span class="nx">foo</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+  <span class="nx">test</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="s1">&#39;Looped-back correctly&#39;</span><span class="p">)</span>
+  <span class="nx">server</span><span class="p">.</span><span class="nx">close</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">test</span><span class="p">.</span><span class="nx">done</span><span class="p">()</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Thu Sep 13 2018 10:16:49 GMT-0700 (PDT)  </div></div></body></html>
